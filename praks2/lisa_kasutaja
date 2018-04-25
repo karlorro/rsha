@@ -1,0 +1,8 @@
+#!/bin/bash
+# Loome kasutaja kodukataloogiga 
+
+kasutajanimi=$1
+useradd -m $kasutajanimi
+
+
+
