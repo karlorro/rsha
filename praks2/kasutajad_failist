@@ -1,6 +1,10 @@
 #!/bin/bash
 
-for user in $(cat kasutajad)
+
+for user in $(cat kasutajad | cut -f1 -d:)
 do
-	sh lisa_kasutaja ${user}
+
+	sh lisa_kasutaja $user
+	echo "$user:$cat kasutajad | cut -f2 -d:" | chpasswd
+
 done
