@@ -2,7 +2,7 @@
 # Loome kasutaja kodukataloogiga 
 
 kasutajanimi=$1
-useradd -m $kasutajanimi
+useradd -m -s /bin/bash $kasutajanimi
 
 
 
