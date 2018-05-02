@@ -1,0 +1,28 @@
+#!/bin/bash
+
+katse=$(dpkg-query -W -f='${Status}' apache2 | grep -c 'ok installed')
+
+if [ $katse = "1" ]; then
+
+	echo " Apache on juba paigaldatud "
+	service apache2 status
+
+else
+	echo   "Kas soovite Apache paigaldada Y/N"
+read vastus
+
+	if [ $vastus = Y ]; then
+	apt-get install apache2 libapache2-mod-php7.0 --assume-yes
+
+elif 
+	[ $vastus = y ]; then
+	apt-get install apache2 libapache2-mod-php7.0 --assume-yes
+
+
+elif
+	[ $vastus = N ]; then
+	exit
+
+fi
+fi
+
