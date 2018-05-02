@@ -1,0 +1,49 @@
+#!/bin/bash
+
+katse=$(dpkg-query -W -f='${Status}' apache2 php7.0 mysql-server phpmyadmin | grep -c 'ok installed')
+
+if [ $katse = "1" ]; then
+
+#        echo " Kõik on paigaldatud "
+      	# service apache2 status
+	#service mysql status
+	#php -v
+
+#else
+        echo   "Kas soovite paigaldada Wordpressi Y/N"
+read vastus
+
+        if [ $vastus = Y ]; then
+	wget http://wordpress.org/latest.tar.gz 
+	tar -xzvf latest.tar.gz
+	mkdir /var/www/html/wordpress
+	mv wordpress /var/www/html/wordpress
+	chown -R www-data:www-data /var/www/*
+	usermod -a -G www-data user
+	echo "CREATE DATABASE wpdatabase;" | mysql -u root -pqwerty
+        echo "CREATE USER 'karl@localhost' IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+	echo "GRANT ALL PRIVILEGES ON wpdatabase.* to karl@localhost IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+	echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+elif
+        [ $vastus = y ]; then
+        wget http://wordpress.org/latest.tar.gz
+        tar -xzvf latest.tar.gz
+        mkdir /var/www/html/wordpress
+        mv wordpress /var/www/html/wordpress
+        chown -R www-data:www-data /var/www/*
+        usermod -a -G www-data user
+       	echo "CREATE DATABASE wpdatabase;" | mysql -u root -pqwerty
+        echo "CREATE USER 'karl@localhost' IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+        echo "GRANT ALL PRIVILEGES ON wpdatabase.* to karl@localhost IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+        echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+
+
+
+elif
+        [ $vastus = N ]; then
+        exit
+
+fi
+fi
+
+
