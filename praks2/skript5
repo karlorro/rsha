@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+
+for kasutaja in $(cat kasutaja) 
+
+do
+	parool=$(pwgen -s 8 1)
+	echo "$kasutaja parooliga $parool"
+	useradd -m -s /bin/bash $kasutaja
+	echo "$kasutaja:$parool" | chpasswd
+done > skript.log	
+	
