@@ -1,0 +1,29 @@
+#!/bin/bash
+
+katse=$(dpkg-query -W -f='${Status}' php7.0 | grep -c 'ok installed')
+
+if [ $katse = "1" ]; then
+
+        echo " PHP7.0 on juba paigaldatud "
+        php -v
+
+else
+        echo   "Kas soovite paigaldada PHP7.0 Y/N"
+read vastus
+
+        if [ $vastus = Y ]; then
+        apt-get install php7.0 php7.0-mysql --assume-yes
+
+elif
+        [ $vastus = y ]; then
+        apt-get install php7.0 php7.0-mysql --assume-yes
+
+
+elif
+        [ $vastus = N ]; then
+        exit
+
+fi
+fi
+
+
