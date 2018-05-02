@@ -1,0 +1,29 @@
+#!/bin/bash
+
+katse=$(dpkg-query -W -f='${Status}' mysql-server | grep -c 'ok installed')
+
+if [ $katse = "1" ]; then
+
+        echo " MySQL server on juba paigaldatud "
+        service mysql status
+
+else
+        echo   "Kas soovite paigaldada MySQL serveri Y/N"
+read vastus
+
+        if [ $vastus = Y ]; then
+        apt-get install mysql-server --assume-yes
+
+elif
+        [ $vastus = y ]; then
+        apt-get install mysql-server --assume-yes
+
+
+elif
+        [ $vastus = N ]; then
+        exit
+
+fi
+fi
+
+
