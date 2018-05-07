@@ -1,0 +1,95 @@
+#!/bin/bash
+
+katse=$(dpkg-query -W -f='${Status}' nginx php7.0-fpm mysql-server phpmyadmin  | grep -c 'ok installed')
+
+if [ $katse = "1" ]; then
+
+    echo " LEMPstack on juba paigaldatud "
+    
+
+else
+    echo   "Kas soovite paigaldada LEMPstacki Y/N"
+read vastus
+
+    if [ $vastus = Y ]; then
+    apt-get install nginx --assume-yes
+    systemctl start nginx.service
+    #Kui /tmp kausta ei liigu siis ei tööta
+    cd /tmp
+    wget https://dev.mysql.com/get/mysql-apt-config_0.8.9-1_all.deb
+    dpkg -i mysql-apt-config_0.8.9-1_all.deb
+    apt-get update
+    apt-get -y install mysql-community-client mysql-community-server
+    cd /root/rsha/praks4
+    apt-get -y install php7.0-fpm
+    systemctl enable php7.0-fpm
+    mkdir /var/www/html/wordpress
+    #chown -R www-data:www-data /var/www/html/*
+    #chmod 755 -R /var/www/html/*
+    #chown -R www-data:www-data /var/www/html/wordpress/
+    #chmod 755 -R /var/www/html/wordpress
+    #usermod -a -G www-data user
+    	echo "CREATE DATABASE lempbase;" | mysql -u root -pqwerty
+    	echo "CREATE USER 'tanelos@localhost' IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+    echo "GRANT ALL PRIVILEGES ON lempbase.* to tanelos@localhost IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+    echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+    	apt-get install phpmyadmin --assume-yes
+    	ln -s /usr/share/phpmyadmin /var/www/html/
+    	cp /var/www/hmtl/phpmyadmin/config.sample.inc.php /var/www/html/phpmyadmin/config.inc.php
+    #Kuna ei oska configi nii suurel hulgal muuta kasutan varem loodud configi
+    cp default /etc/nginx/sites-available/default
+    wget http://wordpress.org/latest.tar.gz
+    tar -xzvf latest.tar.gz
+    mv wordpress /var/www/html/
+    systemctl reload nginx
+    chown -R www-data:www-data /var/www/html/*
+    chmod 755 -R /var/www/html/*
+    chown -R www-data:www-data /var/www/html/wordpress/
+    chmod 755 -R /var/www/html/wordpress
+    usermod -a -G www-data user
+elif     
+    [ $vastus = y ]; then
+    apt-get install nginx --assume-yes
+    systemctl start nginx.service
+    #Kui /tmp kausta ei liigu siis ei tööta
+    cd /tmp
+    wget https://dev.mysql.com/get/mysql-apt-config_0.8.9-1_all.deb
+    dpkg -i mysql-apt-config_0.8.9-1_all.deb
+    apt-get update
+    apt-get -y install mysql-community-client mysql-community-server
+    cd /root/rsha/praks4
+    apt-get -y install php7.0-fpm
+    systemctl enable php7.0-fpm
+    mkdir /var/www/html/wordpress
+    #chown -R www-data:www-data /var/www/html/*
+    #chmod 755 -R /var/www/html/*
+    #chown -R www-data:www-data /var/www/html/wordpress/
+    #chmod 755 -R /var/www/html/wordpress
+    #usermod -a -G www-data user
+    	echo "CREATE DATABASE lempbase;" | mysql -u root -pqwerty
+    	echo "CREATE USER 'tanelos@localhost' IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+    echo "GRANT ALL PRIVILEGES ON lempbase.* to tanelos@localhost IDENTIFIED BY 'qwerty';" | mysql -u root -pqwerty
+    echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+    	apt-get install phpmyadmin --assume-yes
+    	ln -s /usr/share/phpmyadmin /var/www/html/
+    	cp /var/www/hmtl/phpmyadmin/config.sample.inc.php /var/www/html/phpmyadmin/config.inc.php
+    #Kuna ei oska configi nii suurel hulgal muuta kasutan varem loodud configi
+    cp default /etc/nginx/sites-available/default
+    wget http://wordpress.org/latest.tar.gz
+    tar -xzvf latest.tar.gz
+    mv wordpress /var/www/html/
+    systemctl reload nginx
+    chown -R www-data:www-data /var/www/html/*
+    chmod 755 -R /var/www/html/*
+    chown -R www-data:www-data /var/www/html/wordpress/
+    chmod 755 -R /var/www/html/wordpress
+    usermod -a -G www-data user
+
+
+elif
+    [ $vastus = N ]; then
+    exit
+
+fi
+fi
+
