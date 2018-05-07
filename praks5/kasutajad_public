@@ -1,0 +1,44 @@
+#!/bin/bash
+
+kasutajanimi=$1
+owner=$(ls -ld /home/$kasutajanimi/public | awk '{print $3}')
+
+if [ -d /home/$kasutajanimi/public/ ] ; then
+
+if [ $kasutajanimi = $owner ]; then
+
+echo "Kaust on olemas ja $kasutajanimi on kausta omanik"
+
+else
+chown -R $kasutajanimi /home/$kasutajanimi/public/
+fi
+else
+echo "Kausta ei ole olemas"
+sleep 1
+echo "Kausta loomine [=         ] 10%" 
+sleep 1
+echo "Kausta loomine [==        ] 20%" 
+sleep 1
+echo "Kausta loomine [===       ] 30%"
+sleep 1
+echo "Kausta loomine [====      ] 40%" 
+sleep 1
+echo "Kausta loomine [=====     ] 50%" 
+sleep 1
+echo "Kausta loomine [======    ] 60%" 
+sleep 1
+echo "Kausta loomine [=======   ] 70%" 
+sleep 1
+echo "Kausta loomine [========  ] 80%" 
+sleep 2
+echo "Kausta loomine [========= ] 90%" 
+sleep 3
+echo "Kausta loomine [==========] 100%" 
+
+mkdir /home/$kasutajanimi
+mkdir /home/$kasutajanimi/public
+chown -R $kasutajanimi /home/$kasutajanimi/public/
+
+echo "Kaust on loodud ka omanikuks on $kasutajanimi" 
+
+fi
