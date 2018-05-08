@@ -1,0 +1,17 @@
+#!/bin/bash
+
+kasutajanimi=$1
+parool=$(pwgen -s 8 1)
+andmebaas="$kasutajanimi""_test"
+
+	echo "CREATE DATABASE $andmebaas;" | mysql -u root -pqwerty
+	echo "CREATE USER '$kasutajanimi'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
+	echo "GRANT ALL PRIVILEGES ON $andmebaas.* to $kasutajanimi@localhost IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
+	echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+
+if	[ -d /home/$kasutajanimi/ ]; then
+	echo "Kasutajanimi:$kasutajanimi - Parool:$parool" > /home/$kasutajanimi/.my.cnf
+else
+	mkdir /home/$kasutajanimi
+	echo "Kasutajanimi:$kasutajanimi - Parool:$parool" > /home/$kasutajanimi/.my.cnf
+fi
