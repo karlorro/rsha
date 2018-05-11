@@ -4,10 +4,13 @@ kasutajanimi=$1
 parool=$(pwgen -s 8 1)
 andmebaas="$kasutajanimi""_test"
 
+#Loome mysql kasutaja ja andmebaasi seatud parameetritega. Anname kasutajale õigused.
 	echo "CREATE DATABASE $andmebaas;" | mysql -u root -pqwerty
 	echo "CREATE USER '$kasutajanimi'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
 	echo "GRANT ALL PRIVILEGES ON $andmebaas.* to $kasutajanimi@localhost IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
 	echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+
+#Kirjutame kasutaja ja parooli tema kodukausta. Kui kodukausta ei ole olemas, siis loome selle.
 
 if	[ -d /home/$kasutajanimi/ ]; then
 	echo "Kasutajanimi:$kasutajanimi - Parool:$parool" > /home/$kasutajanimi/.my.cnf
