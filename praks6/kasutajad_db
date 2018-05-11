@@ -1,29 +1,25 @@
 #!/bin/bash
 
-kasutajanimi=$1
-parool=$(pwgen -s 8 1)
-andmebaas="$kasutajanimi""_test"
+#Väljastame kõik kasutajad ja kirjutame nad faili
+ls /home > kasutajad.txt
 
-#Kontrollime config faili olemasolu
-if [ -f /home/$kasutajanimi/.my.cnf ]; then
+#Väljastame kasutajad.txt faili ridade haaval ning võtame nad muutujaks
+for kasutajad in `more kasutajad.txt`
+do
+if [ ! -f /home/$kasutajad/.my.cnf ]; then
 
-	echo "Kasutaja konfiguratsioon ja andmebaas on juba olemas"
+#Parooli genereerimine
+	parool=$(pwgen -s 8 1)
+	andmebaas=$(echo "$kasutajad"_test)
 
-#Kui config faili ei ole, loome kasutaja koos andmebaasiga. Anname talle õigused
-else
+#Mysql kasutaja ja andmebaasi loomine. Parooli ja õiguste määramine.
+	echo "CREATE USER IF NOT EXISTS '$kasutajad'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
+	echo "CREATE DATABASE IF NOT EXISTS $andmebaas" | mysql -u root -pqwerty
+	echo "GRANT ALL PRIVILEGES ON $andmebaas.* TO '$kasutajad'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
+	echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
 
-        echo "CREATE DATABASE $andmebaas;" | mysql -u root -pqwerty
-        echo "CREATE USER '$kasutajanimi'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
-        echo "GRANT ALL PRIVILEGES ON $andmebaas.* to $kasutajanimi@localhost IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
-        echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
-
-#Kirjutame kasutajanime ja parooli kodukaustas .my.cnf faili . Kui seda ei ole olemas loome vajaliku kausta ja faili:
-fi 
-
-if      [ -d /home/$kasutajanimi/ ]; then
-        echo "Kasutajanimi:$kasutajanimi - Parool:$parool" > /home/$kasutajanimi/.my.cnf
-else
-        mkdir /home/$kasutajanimi
-        echo "Kasutajanimi:$kasutajanimi - Parool:$parool" > /home/$kasutajanimi/.my.cnf
+#Väljastame kasutajanime ja parooli kasutaja kausta .my.cnf faili  
+	echo "Kasutajanimi:$kasutajad - Parool:$parool" > /home/$kasutajad/.my.cnf
+	
 fi
-
+done
