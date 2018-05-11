@@ -4,16 +4,20 @@ kasutajanimi=$1
 parool=$(pwgen -s 8 1)
 andmebaas="$kasutajanimi""_test"
 
+#Kontrollime config faili olemasolu
 if [ -f /home/$kasutajanimi/.my.cnf ]; then
 
 	echo "Kasutaja konfiguratsioon ja andmebaas on juba olemas"
 
+#Kui config faili ei ole, loome kasutaja koos andmebaasiga. Anname talle õigused
 else
 
         echo "CREATE DATABASE $andmebaas;" | mysql -u root -pqwerty
         echo "CREATE USER '$kasutajanimi'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
         echo "GRANT ALL PRIVILEGES ON $andmebaas.* to $kasutajanimi@localhost IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
         echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+
+#Kirjutame kasutajanime ja parooli kodukaustas .my.cnf faili . Kui seda ei ole olemas loome vajaliku kausta ja faili:
 fi 
 
 if      [ -d /home/$kasutajanimi/ ]; then
