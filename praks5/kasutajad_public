@@ -3,12 +3,16 @@
 kasutajanimi=$1
 owner=$(ls -ld /home/$kasutajanimi/public | awk '{print $3}')
 
+#Kontrollime kas kasutjal on kodukataloog ja seal sees public kausst
 if [ -d /home/$kasutajanimi/public/ ] ; then
 
+#Kontrollime kas kasutaja on ka kausta omanik
 if [ $kasutajanimi = $owner ]; then
 
 echo "Kaust on olemas ja $kasutajanimi on kausta omanik"
 
+#Kui ei ole siis teeme kasutaja omanikuks
+#Kui kausta ei ole siis loome kausta
 else
 chown -R $kasutajanimi /home/$kasutajanimi/public/
 fi
