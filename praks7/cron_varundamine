@@ -1,0 +1,7 @@
+SHELL= /bin/bash
+
+MAILTO= root
+
+0 */2 * * * sh /root/rsha/praks7/kasutajad_db >/dev/null 2>&1
+
+0 0 * * * sh /root/rsha/praks7/varunda_db_kasutajad >/dev/null 2>&1
