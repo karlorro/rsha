@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#Väljastame kõik kasutajad ja kirjutame nad faili
+ls /home > kasutajad.txt
+
+#Väljastame kasutajad.txt faili ridade haaval ning võtame nad muutujaks
+for kasutajad in `more kasutajad.txt`
+do
+if [ ! -f /home/$kasutajad/.my.cnf ]; then
+
+#Parooli genereerimine
+	parool=$(pwgen -s 8 1)
+	andmebaas=$(echo "$kasutajad"_test)
+
+#Mysql kasutaja ja andmebaasi loomine. Parooli ja õiguste määramine.
+	echo "CREATE USER IF NOT EXISTS '$kasutajad'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
+	echo "CREATE DATABASE IF NOT EXISTS $andmebaas" | mysql -u root -pqwerty
+	echo "GRANT ALL PRIVILEGES ON $andmebaas.* TO '$kasutajad'@'localhost' IDENTIFIED BY '$parool';" | mysql -u root -pqwerty
+	echo "FLUSH PRIVILEGES;" | mysql -u root -pqwerty
+
+#Väljastame kasutajanime ja parooli kasutaja kausta .my.cnf faili  
+	echo "Kasutajanimi:$kasutajad - Parool:$parool" > /home/$kasutajad/.my.cnf
+	
+fi
+done
