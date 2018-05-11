@@ -1,0 +1,19 @@
+#!/bin/bash
+
+kasutajanimi=$1
+andmebaas="$kasutajanimi""_test"
+aeg=$(date +"%Y-%m-%dT%H:%M:%S")
+parool=$(cut -f3 -d: /home/$kasutajanimi/.my.cnf)
+
+#Loome kataloogi, kugu andmebaasid varundatakse
+mkdir mysql_backup
+
+# Varundame andmebaasi. Kasutame varem seatud parameetreid, millega määrame kasutaja, andmebaasi nime, aja ning antud kasutaja parooli
+mysqldump -u $kasutajanimi  --password=$parool $andmebaas | gzip -9 > $aeg$andmebaas.backup.sql
+
+#Liigutame varundatud andmebaasi varem loodud kausta
+mv  $aeg$andmebaas.backup.sql mysql_backup 
+
+
+
+
